@@ -1,0 +1,70 @@
+@media print {
+  /* Hide elements that shouldn't be printed */
+  .sidebar,
+  .navbar,
+  button,
+  [role="tablist"],
+  .no-print {
+    display: none !important;
+  }
+
+  /* Ensure the content takes up the full page */
+  main {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Adjust card styling for print */
+  .card {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    break-inside: avoid !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Make sure tables print well */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  th,
+  td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+    text-align: left !important;
+  }
+
+  /* Add page breaks where needed */
+  .page-break {
+    page-break-after: always !important;
+  }
+
+  /* Ensure charts print properly */
+  canvas {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Add a header with the report title */
+  body::before {
+    content: "SH/S.CRM Report";
+    display: block;
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    margin-bottom: 1cm;
+  }
+
+  /* Add page numbers */
+  @page {
+    margin: 1cm;
+  }
+
+  /* Ensure text is black for better printing */
+  body {
+    color: black !important;
+    background: white !important;
+  }
+}
