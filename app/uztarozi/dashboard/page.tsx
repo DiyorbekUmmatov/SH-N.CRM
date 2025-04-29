@@ -2,7 +2,8 @@ import type React from "react"
 import { BarChart3, Building2, Scale, Truck } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
+import Weight from "@/components/ui/weight"
+import Camera from "@/components/ui/camera"
 export default function UztaroziDashboard() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -16,6 +17,12 @@ export default function UztaroziDashboard() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <Weight />
+          </div>
+          <div>
+            <Camera />
+          </div>
           <Card>
             <CardHeader>
               <CardTitle>Daily Cargo Summary</CardTitle>
