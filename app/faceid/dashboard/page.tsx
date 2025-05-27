@@ -2,6 +2,11 @@ import type React from "react"
 import { Clock, DollarSign, Users } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import dynamic from "next/dynamic";
+
+const CameraStream = dynamic(() => import("@/components/camerastream"), {
+  ssr: false,
+});
 
 export default function FaceIdDashboard() {
   return (
@@ -9,10 +14,30 @@ export default function FaceIdDashboard() {
       <Navbar title="Face ID System Dashboard" />
       <main className="flex-1 p-6 space-y-6">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <DashboardCard title="Today's Attendance" value="42/48" icon={Users} description="87.5% attendance rate" />
-          <DashboardCard title="Active Employees" value="48" icon={Users} description="2 on leave, 0 blocked" />
-          <DashboardCard title="Total Salary" value="$24,680" icon={DollarSign} description="This month" />
-          <DashboardCard title="Late Arrivals" value="5" icon={Clock} description="10.4% of employees" />
+          <DashboardCard
+            title="Today's Attendance"
+            value="42/48"
+            icon={Users}
+            description="87.5% attendance rate"
+          />
+          <DashboardCard
+            title="Active Employees"
+            value="48"
+            icon={Users}
+            description="2 on leave, 0 blocked"
+          />
+          <DashboardCard
+            title="Total Salary"
+            value="$24,680"
+            icon={DollarSign}
+            description="This month"
+          />
+          <DashboardCard
+            title="Late Arrivals"
+            value="5"
+            icon={Clock}
+            description="10.4% of employees"
+          />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -21,9 +46,8 @@ export default function FaceIdDashboard() {
               <CardTitle>Attendance Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                Chart will be displayed here
-              </div>
+              
+              <CameraStream />
             </CardContent>
           </Card>
 
@@ -40,11 +64,15 @@ export default function FaceIdDashboard() {
                     </div>
                     <div className="flex-1">
                       <div className="font-medium">{checkIn.name}</div>
-                      <div className="text-sm text-muted-foreground">{checkIn.department}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {checkIn.department}
+                      </div>
                     </div>
                     <div className="text-right">
                       <div className="font-medium">{checkIn.time}</div>
-                      <div className="text-sm text-muted-foreground">{checkIn.status}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {checkIn.status}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -54,7 +82,7 @@ export default function FaceIdDashboard() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
 interface DashboardCardProps {
