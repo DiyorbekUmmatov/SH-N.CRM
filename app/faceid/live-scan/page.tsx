@@ -1,4 +1,10 @@
 "use client"
+import dynamic from "next/dynamic";
+
+
+const CameraStream = dynamic(() => import("@/components/camerastream"), {
+ssr: false,
+});
 
 import { useState, useRef, useEffect } from "react"
 import { Camera, Check, User } from "lucide-react"
@@ -135,13 +141,12 @@ export default function LiveScan() {
             </CardHeader>
             <CardContent>
               <div className="aspect-video bg-muted rounded-md overflow-hidden relative">
-                {isCameraActive ? (
-                  <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
-                ) : (
+              
                   <div className="flex items-center justify-center h-full">
-                    <Camera className="h-12 w-12 text-muted-foreground" />
+                    
+                    <CameraStream />
                   </div>
-                )}
+               
 
                 {detectedEmployee && (
                   <div className="absolute bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm p-4">
@@ -150,8 +155,12 @@ export default function LiveScan() {
                         <User className="h-6 w-6 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <div className="font-medium text-lg">{detectedEmployee.name}</div>
-                        <div className="text-sm text-muted-foreground">{detectedEmployee.department}</div>
+                        <div className="font-medium text-lg">
+                          {detectedEmployee.name}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {detectedEmployee.department}
+                        </div>
                       </div>
                       <Button onClick={confirmAttendance} size="sm">
                         <Check className="mr-2 h-4 w-4" />
@@ -163,7 +172,10 @@ export default function LiveScan() {
               </div>
 
               <div className="mt-4 flex justify-center">
-                <Button onClick={toggleCamera} variant={isCameraActive ? "destructive" : "default"}>
+                <Button
+                  onClick={toggleCamera}
+                  variant={isCameraActive ? "destructive" : "default"}
+                >
                   {isCameraActive ? "Stop Camera" : "Start Camera"}
                 </Button>
               </div>
@@ -176,11 +188,16 @@ export default function LiveScan() {
               <CardDescription>Recent attendance records</CardDescription>
             </CardHeader>
             <CardContent>
-              <DataTable columns={columns} data={recentLogs} searchKey="name" searchPlaceholder="Search employees..." />
+              <DataTable
+                columns={columns}
+                data={recentLogs}
+                searchKey="name"
+                searchPlaceholder="Search employees..."
+              />
             </CardContent>
           </Card>
         </div>
       </main>
     </div>
-  )
+  );
 }

@@ -18,6 +18,7 @@ import { ReportFilters } from "./report-filters";
 import { ReportChart } from "@/components/report-chart";
 import { SummaryCardsGrid } from "@/components/summary-cards";
 import { ResponsiveTabs } from "@/components/responsive-tabs";
+import { Button } from "@/components/ui/button";
 
 // Define the data structure for vehicle reports
 interface VehicleReport {
@@ -253,6 +254,12 @@ export default function UztaroziReports() {
   );
   const averageWeight = Math.round(totalWeight / totalVehicles);
 
+  const handlePrint = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar title={t("reports")} />
@@ -265,7 +272,7 @@ export default function UztaroziReports() {
             dateRange={date}
             onDateRangeChange={handleDateChange}
             onExport={handleExport}
-            onPrint={() => window.print()}
+            onPrint={handlePrint}
           />
         </div>
 
@@ -450,6 +457,8 @@ export default function UztaroziReports() {
             },
           ]}
         />
+
+        <Button onClick={handlePrint}>{t("print")}</Button>
       </main>
     </div>
   );

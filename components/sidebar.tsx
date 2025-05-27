@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   BarChart3,
   Truck,
@@ -19,9 +19,9 @@ import {
   Sun,
   Languages,
   PieChart,
-} from "lucide-react"
-import { useTheme } from "next-themes"
-import { useTranslation } from "@/hooks/use-translation"
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import { useTranslation } from "@/hooks/use-translation";
 import {
   Sidebar as SidebarComponent,
   SidebarContent,
@@ -37,34 +37,44 @@ import {
   SidebarTrigger,
   SidebarProvider as ShadcnSidebarProvider,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+} from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-  return <ShadcnSidebarProvider defaultOpen={true}>{children}</ShadcnSidebarProvider>
+  return (
+    <ShadcnSidebarProvider defaultOpen={true}>{children}</ShadcnSidebarProvider>
+  );
 }
 
 export function Sidebar() {
-  const pathname = usePathname()
-  const { t, changeLanguage, currentLanguage } = useTranslation()
-  const { theme, setTheme } = useTheme()
+  const pathname = usePathname();
+  const { t, changeLanguage, currentLanguage } = useTranslation();
+  const { theme, setTheme } = useTheme();
   const [activeInterface, setActiveInterface] = useState<"uztarozi" | "faceid">(
-    pathname.includes("/faceid") ? "faceid" : "uztarozi",
-  )
-  const [isMobile, setIsMobile] = useState(false)
+    pathname.includes("/faceid") ? "faceid" : "uztarozi"
+  );
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
+      if (typeof window === "undefined") return;
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", checkMobile);
+      return () => window.removeEventListener("resize", checkMobile);
     }
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+  }, []);
 
-  const isActive = (path: string) => pathname === path
+  const isActive = (path: string) => pathname === path;
 
   const uztaroziMenuItems = [
     {
@@ -102,7 +112,7 @@ export function Sidebar() {
       icon: PieChart,
       path: "/uztarozi/reports",
     },
-  ]
+  ];
 
   const faceidMenuItems = [
     {
@@ -135,10 +145,13 @@ export function Sidebar() {
       icon: PieChart,
       path: "/faceid/reports",
     },
-  ]
+  ];
 
   return (
-    <SidebarComponent variant="sidebar" collapsible={isMobile ? "offcanvas" : "icon"}>
+    <SidebarComponent
+      variant="sidebar"
+      collapsible={isMobile ? "offcanvas" : "icon"}
+    >
       <SidebarHeader className="flex items-center justify-between p-4">
         <div className="flex items-center gap-2">
           <div className="font-bold text-xl">SH/S.CRM</div>
@@ -188,7 +201,11 @@ export function Sidebar() {
               <SidebarMenu>
                 {uztaroziMenuItems.map((item) => (
                   <SidebarMenuItem key={item.path}>
-                    <SidebarMenuButton isActive={isActive(item.path)} asChild tooltip={item.title}>
+                    <SidebarMenuButton
+                      isActive={isActive(item.path)}
+                      asChild
+                      tooltip={item.title}
+                    >
                       <Link href={item.path}>
                         <item.icon />
                         <span>{item.title}</span>
@@ -208,7 +225,11 @@ export function Sidebar() {
               <SidebarMenu>
                 {faceidMenuItems.map((item) => (
                   <SidebarMenuItem key={item.path}>
-                    <SidebarMenuButton isActive={isActive(item.path)} asChild tooltip={item.title}>
+                    <SidebarMenuButton
+                      isActive={isActive(item.path)}
+                      asChild
+                      tooltip={item.title}
+                    >
                       <Link href={item.path}>
                         <item.icon />
                         <span>{item.title}</span>
@@ -227,12 +248,17 @@ export function Sidebar() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Avatar>
-                <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
+                <AvatarImage
+                  src="/placeholder.svg?height=32&width=32"
+                  alt="User"
+                />
                 <AvatarFallback>AD</AvatarFallback>
               </Avatar>
               <div>
                 <div className="font-medium">Admin User</div>
-                <div className="text-xs text-muted-foreground">admin@example.com</div>
+                <div className="text-xs text-muted-foreground">
+                  admin@example.com
+                </div>
               </div>
             </div>
             <Button variant="ghost" size="icon" asChild>
@@ -245,24 +271,40 @@ export function Sidebar() {
           <div className="flex items-center justify-between mt-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="w-full justify-start">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full justify-start"
+                >
                   <Languages className="mr-2 h-4 w-4" />
                   {currentLanguage === "en" ? "English" : "Uzbek"}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => changeLanguage("en")}>English</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage("uz")}>Uzbek</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => changeLanguage("en")}>
+                  English
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => changeLanguage("uz")}>
+                  Uzbek
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button variant="outline" size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
       </SidebarFooter>
       <SidebarRail />
     </SidebarComponent>
-  )
+  );
 }

@@ -1,98 +1,134 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { TrendingUp, Loader2 } from "lucide-react"
-import { Navbar } from "@/components/navbar"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { DataTable } from "@/components/ui/data-table"
-import { useTranslation } from "@/hooks/use-translation"
-import { addDays } from "date-fns"
-import { ReportFilters } from "./report-filters"
-import { ReportChart } from "@/components/report-chart"
-import { SummaryCardsGrid } from "@/components/summary-cards"
-import { ResponsiveTabs } from "@/components/responsive-tabs"
-import { attendanceColumns, departmentColumns, employeeColumns } from "./columns"
+import { useState } from "react";
+import { TrendingUp, Loader2 } from "lucide-react";
+import { Navbar } from "@/components/navbar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { DataTable } from "@/components/ui/data-table";
+import { useTranslation } from "@/hooks/use-translation";
+import { addDays } from "date-fns";
+import { ReportFilters } from "./report-filters";
+import { ReportChart } from "@/components/report-chart";
+import { SummaryCardsGrid } from "@/components/summary-cards";
+import { ResponsiveTabs } from "@/components/responsive-tabs";
+import {
+  attendanceColumns,
+  departmentColumns,
+  employeeColumns,
+} from "./columns";
+import { Button } from "@/components/ui/button";
 
 // Define the data structure for attendance reports
 interface AttendanceReport {
-  id: string
-  date: string
-  employeeName: string
-  department: string
-  checkIn: string
-  checkOut: string
-  hoursWorked: number
-  status: "on-time" | "late" | "absent"
+  id: string;
+  date: string;
+  employeeName: string;
+  department: string;
+  checkIn: string;
+  checkOut: string;
+  hoursWorked: number;
+  status: "on-time" | "late" | "absent";
 }
 
 // Define the data structure for department reports
 interface DepartmentReport {
-  id: string
-  department: string
-  totalEmployees: number
-  presentCount: number
-  lateCount: number
-  absentCount: number
-  attendanceRate: number
-  averageHours: number
+  id: string;
+  department: string;
+  totalEmployees: number;
+  presentCount: number;
+  lateCount: number;
+  absentCount: number;
+  attendanceRate: number;
+  averageHours: number;
 }
 
 // Define the data structure for employee reports
 interface EmployeeReport {
-  id: string
-  employeeName: string
-  department: string
-  daysPresent: number
-  daysLate: number
-  daysAbsent: number
-  totalHours: number
-  averageHours: number
+  id: string;
+  employeeName: string;
+  department: string;
+  daysPresent: number;
+  daysLate: number;
+  daysAbsent: number;
+  totalHours: number;
+  averageHours: number;
 }
 
 export default function FaceIdReports() {
-  const { t } = useTranslation()
-  const [reportType, setReportType] = useState<"daily" | "weekly" | "monthly" | "yearly">("daily")
+  const { t } = useTranslation();
+  const [reportType, setReportType] = useState<
+    "daily" | "weekly" | "monthly" | "yearly"
+  >("daily");
   const [date, setDate] = useState<{
-    from: Date
-    to: Date
+    from: Date;
+    to: Date;
   }>({
     from: new Date(),
     to: addDays(new Date(), 7),
-  })
+  });
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   // Simulate data loading when changing filters
-  const handleFilterChange = (value: "daily" | "weekly" | "monthly" | "yearly") => {
-    setIsLoading(true)
-    setReportType(value)
+  const handleFilterChange = (
+    value: "daily" | "weekly" | "monthly" | "yearly"
+  ) => {
+    setIsLoading(true);
+    setReportType(value);
     // Simulate API call
     setTimeout(() => {
-      setIsLoading(false)
-    }, 500)
-  }
+      setIsLoading(false);
+    }, 500);
+  };
 
   // Handle date range change
   const handleDateChange = (newDate: { from: Date; to: Date }) => {
-    setIsLoading(true)
-    setDate(newDate)
+    setIsLoading(true);
+    setDate(newDate);
     // Simulate API call
     setTimeout(() => {
-      setIsLoading(false)
-    }, 500)
-  }
+      setIsLoading(false);
+    }, 500);
+  };
 
   // Handle export
   const handleExport = () => {
-    alert(`Exporting ${reportType} report data...`)
-  }
+    alert(`Exporting ${reportType} report data...`);
+  };
 
   // Calculate summary data
-  const totalEmployees = mockDepartmentReports.reduce((sum, dept) => sum + dept.totalEmployees, 0)
-  const presentCount = mockDepartmentReports.reduce((sum, dept) => sum + dept.presentCount, 0)
-  const lateCount = mockDepartmentReports.reduce((sum, dept) => sum + dept.lateCount, 0)
-  const absentCount = mockDepartmentReports.reduce((sum, dept) => sum + dept.absentCount, 0)
-  const attendanceRate = Math.round(((presentCount + lateCount) / (presentCount + lateCount + absentCount)) * 100)
+  const totalEmployees = mockDepartmentReports.reduce(
+    (sum, dept) => sum + dept.totalEmployees,
+    0
+  );
+  const presentCount = mockDepartmentReports.reduce(
+    (sum, dept) => sum + dept.presentCount,
+    0
+  );
+  const lateCount = mockDepartmentReports.reduce(
+    (sum, dept) => sum + dept.lateCount,
+    0
+  );
+  const absentCount = mockDepartmentReports.reduce(
+    (sum, dept) => sum + dept.absentCount,
+    0
+  );
+  const attendanceRate = Math.round(
+    ((presentCount + lateCount) / (presentCount + lateCount + absentCount)) *
+      100
+  );
+
+  const handlePrint = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
 
   return (
     <div className="flex flex-col w-full   min-h-screen">
@@ -101,13 +137,12 @@ export default function FaceIdReports() {
         <div className="mb-6 flex flex-col  md:flex-row justify-between items-center  md:items-center gap-4">
           <h1 className="text-2xl font-bold">{t("reports")}</h1>
           <ReportFilters
-            
             reportType={reportType}
             onReportTypeChange={handleFilterChange}
             dateRange={date}
             onDateRangeChange={handleDateChange}
             onExport={handleExport}
-            onPrint={() => window.print()}
+            onPrint={handlePrint}
           />
           {/* <img src="https://picsum.photos/200" alt="" /> */}
         </div>
@@ -155,7 +190,9 @@ export default function FaceIdReports() {
               datasets: [
                 {
                   label: "Attendance Rate (%)",
-                  data: mockDepartmentReports.map((dept) => dept.attendanceRate),
+                  data: mockDepartmentReports.map(
+                    (dept) => dept.attendanceRate
+                  ),
                   backgroundColor: [
                     "rgba(54, 162, 235, 0.6)",
                     "rgba(255, 99, 132, 0.6)",
@@ -211,7 +248,9 @@ export default function FaceIdReports() {
                       <div className="w-full py-10 flex items-center justify-center">
                         <div className="flex flex-col items-center gap-2">
                           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                          <p className="text-sm text-muted-foreground">Loading report data...</p>
+                          <p className="text-sm text-muted-foreground">
+                            Loading report data...
+                          </p>
                         </div>
                       </div>
                     ) : (
@@ -233,14 +272,18 @@ export default function FaceIdReports() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Department Reports</CardTitle>
-                    <CardDescription>Aggregated data by department</CardDescription>
+                    <CardDescription>
+                      Aggregated data by department
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     {isLoading ? (
                       <div className="w-full py-10 flex items-center justify-center">
                         <div className="flex flex-col items-center gap-2">
                           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                          <p className="text-sm text-muted-foreground">Loading report data...</p>
+                          <p className="text-sm text-muted-foreground">
+                            Loading report data...
+                          </p>
                         </div>
                       </div>
                     ) : (
@@ -262,14 +305,18 @@ export default function FaceIdReports() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Employee Reports</CardTitle>
-                    <CardDescription>Aggregated data by employee</CardDescription>
+                    <CardDescription>
+                      Aggregated data by employee
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     {isLoading ? (
                       <div className="w-full py-10 flex items-center justify-center">
                         <div className="flex flex-col items-center gap-2">
                           <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                          <p className="text-sm text-muted-foreground">Loading report data...</p>
+                          <p className="text-sm text-muted-foreground">
+                            Loading report data...
+                          </p>
                         </div>
                       </div>
                     ) : (
@@ -288,7 +335,7 @@ export default function FaceIdReports() {
         />
       </main>
     </div>
-  )
+  );
 }
 
 // Mock data for attendance reports
@@ -373,7 +420,7 @@ const mockAttendanceReports: AttendanceReport[] = [
     hoursWorked: 8.83,
     status: "on-time",
   },
-]
+];
 
 // Mock data for department reports
 const mockDepartmentReports: DepartmentReport[] = [
@@ -427,7 +474,7 @@ const mockDepartmentReports: DepartmentReport[] = [
     attendanceRate: 90,
     averageHours: 8.95,
   },
-]
+];
 
 // Mock data for employee reports
 const mockEmployeeReports: EmployeeReport[] = [
@@ -481,4 +528,4 @@ const mockEmployeeReports: EmployeeReport[] = [
     totalHours: 168.5,
     averageHours: 8.87,
   },
-]
+];

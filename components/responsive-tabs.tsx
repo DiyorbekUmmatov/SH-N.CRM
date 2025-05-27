@@ -1,41 +1,48 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Tab {
-  value: string
-  label: string
-  content: React.ReactNode
+  value: string;
+  label: string;
+  content: React.ReactNode;
 }
 
 interface ResponsiveTabsProps {
-  tabs: Tab[]
-  defaultValue?: string
-  className?: string
+  tabs: Tab[];
+  defaultValue?: string;
+  className?: string;
 }
 
-export function ResponsiveTabs({ tabs, defaultValue = tabs[0]?.value, className }: ResponsiveTabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultValue)
-  const [isMobile, setIsMobile] = useState(false)
+export function ResponsiveTabs({
+  tabs,
+  defaultValue = tabs[0]?.value,
+  className,
+}: ResponsiveTabsProps) {
+  const [activeTab, setActiveTab] = useState(defaultValue);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 640)
+      if (typeof window === "undefined") return;
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkScreenSize();
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", checkScreenSize);
+      return () => window.removeEventListener("resize", checkScreenSize);
     }
-
-    // Initial check
-    checkScreenSize()
-
-    // Add event listener for window resize
-    window.addEventListener("resize", checkScreenSize)
-
-    // Clean up
-    return () => window.removeEventListener("resize", checkScreenSize)
-  }, [])
+  }, []);
 
   return (
     <div className={className}>
@@ -56,7 +63,11 @@ export function ResponsiveTabs({ tabs, defaultValue = tabs[0]?.value, className 
           <div>{tabs.find((tab) => tab.value === activeTab)?.content}</div>
         </div>
       ) : (
-        <Tabs defaultValue={defaultValue} value={activeTab} onValueChange={setActiveTab}>
+        <Tabs
+          defaultValue={defaultValue}
+          value={activeTab}
+          onValueChange={setActiveTab}
+        >
           <TabsList className="mb-4">
             {tabs.map((tab) => (
               <TabsTrigger key={tab.value} value={tab.value}>
@@ -72,5 +83,5 @@ export function ResponsiveTabs({ tabs, defaultValue = tabs[0]?.value, className 
         </Tabs>
       )}
     </div>
-  )
+  );
 }
